@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid')
+  const scoreDisplay = document.getElementById('score')
   const width = 8
   const squares = []
   let score = 0
+  
 
   const candyColors = [
     'red',
@@ -18,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 0; i < width*width; i++) {
       const square = document.createElement('div')
       square.setAttribute('draggable', true)
-      square.setAttribute('id', i)
+      square.setAttribute('id', i) 
       let randomColor = Math.floor(Math.random() * candyColors.length)
       square.style.backgroundColor = candyColors[randomColor]
       grid.appendChild(square)
@@ -175,6 +177,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // drop candies once some have been cleared
+  function moveDown() {
+    for (i = 0; i < 55; i++) {
+      if (squares[i + width].style.backgroundColor === '') {
+        squares[i + width].style.backgroundColor = squares[i].style.backgroundColor
+        squares[i].style.backgroundColor = ''
+        const firstRow = [0,1,2,3,4,5,6,7]
+        const isFirstRow = firstRow.includes(i)
+        if (isFirstRow && squares[i].style.backgroundColor === '') {
+          let randomColor = Math.floor(Math.random() * candyColors.length)
+          squares[i].style.backgroundColor = candyColors[randomColor]
+        }
+      }
+    }
+  }
+
+  function displayScore() {
+    scoreDisplay.innerHTML = score
+  }
 
 
   window.setInterval(function(){
@@ -184,7 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
     checkColumnForFour()
     checkRowForThree()
     checkColumnForThree()
-
+    displayScore()
+    moveDown()
   }, 100)
 
 
